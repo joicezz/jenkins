@@ -1,17 +1,28 @@
 #!/bin/bash
-# USE UBUNTU20.04 - INSTANCE: 2GB RAM + 2VCPU MIN - WILL ONLY WORK
-sudo apt update -y
-sudo apt install openjdk-11-jdk -y
-sudo apt update -y
-sudo apt install maven -y
-curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | sudo tee \
-  /usr/share/keyrings/jenkins-keyring.asc > /dev/null
-echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
-  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
-  /etc/apt/sources.list.d/jenkins.list > /dev/null
-sudo apt-get update -y
-sudo apt-get install jenkins -y
-service jenkins start
-cat /var/lib/jenkins/secrets/initialAdminPassword
-#chmod 777 jenkins.sh
-#./jenkins.sh
+
+# Update system packages
+sudo yum update -y
+
+# Install Java
+sudo amazon-linux-extras install java-17-amazon-corretto -y
+
+# Add Jenkins repository
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+
+# Import GPG key
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+
+# Install Jenkins
+sudo yum install jenkins -y
+
+# Start Jenkins service
+sudo systemctl start jenkins
+
+# Display initial admin password
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+
+# Remove unnecessary line
+# chmod 777 jenkins.sh  # This is not recommended due to security concerns
+
+# Remove unnecessary line
+# ./jenkins.sh          # This is redundant since the script is already running
